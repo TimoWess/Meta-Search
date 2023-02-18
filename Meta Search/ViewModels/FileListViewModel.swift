@@ -28,7 +28,15 @@ class FileListViewModel: ObservableObject {
     
     var checkOptions: CheckFileOptions {
         get {
-            return CheckFileOptions(searchName: searchName, searchExtension: searchExtension, searchOwner: searchOwner, searchSizeStart: searchSizeStart, searchSizeEnd: searchSizeEnd, selectedUnitMin: selectedUnitMin, selectedUnitMax: selectedUnitMax)
+            return CheckFileOptions(
+                searchName: searchName,
+                searchExtension: searchExtension,
+                searchOwner: searchOwner,
+                searchSizeStart: searchSizeStart,
+                searchSizeEnd: searchSizeEnd,
+                selectedUnitMin: selectedUnitMin,
+                selectedUnitMax: selectedUnitMax
+            )
         }
     }
     

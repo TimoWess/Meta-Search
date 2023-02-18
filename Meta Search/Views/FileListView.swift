@@ -50,20 +50,28 @@ struct FileListView: View {
         List {
             ForEach(allFiles.filter({ checkFile(file: $0, options: checkOptions) })) { file in
                 HStack {
-                    Text(file.url.path())
+                    VStack(alignment: .leading) {
+                        Text(file.url.path())
+                        Text("Owner: \(file.owner)").font(.caption)
+                    }
                     Spacer()
+                    VStack {
+                        HStack {
 #if DEBUG
-                    Text(String(format: "%.2f KB", Double(file.size) / 1000))
+                            Text(String(format: "%.2f KB", Double(file.size) / 1000))
 #endif
-                    Text(SizeUnits.getBiggestUnitRepresentation(size: file.size))
+                            Text(SizeUnits.getBiggestUnitRepresentation(size: file.size))
+                        }
+                        Text(file.creationDate.description)
+                    }
                 }
                 .listRowBackground(self.selectedFile?.id == file.id ? Color.accentColor : Color.clear)
-                .onTapGesture {
-                    self.selectedFile = file
-                }
                 .onTapGesture(count: 2) {
                     NSWorkspace.shared.activateFileViewerSelecting([file.url])
                 }
+                .simultaneousGesture(TapGesture().onEnded {
+                    self.selectedFile = file
+                })
             }
         }
     }
