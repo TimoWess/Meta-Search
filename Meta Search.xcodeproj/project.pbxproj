@@ -13,6 +13,10 @@
 		588F15BB298C42C800E8F8B2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 588F15BA298C42C800E8F8B2 /* Assets.xcassets */; };
 		588F15BE298C42C800E8F8B2 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 588F15BD298C42C800E8F8B2 /* Preview Assets.xcassets */; };
 		58B55779299FDC7D00DCB3E2 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 58B55778299FDC7D00DCB3E2 /* .gitignore */; };
+		58B5577C29A0E24100DCB3E2 /* FileListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B5577B29A0E24100DCB3E2 /* FileListView.swift */; };
+		58B5577E29A0E2BF00DCB3E2 /* CheckFileOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B5577D29A0E2BF00DCB3E2 /* CheckFileOptions.swift */; };
+		58B5578029A0E78F00DCB3E2 /* SizeUnits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B5577F29A0E78F00DCB3E2 /* SizeUnits.swift */; };
+		58B5578429A1025700DCB3E2 /* FileListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B5578329A1025700DCB3E2 /* FileListViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +28,10 @@
 		588F15BD298C42C800E8F8B2 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		588F15BF298C42C800E8F8B2 /* Meta_Search.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Meta_Search.entitlements; sourceTree = "<group>"; };
 		58B55778299FDC7D00DCB3E2 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		58B5577B29A0E24100DCB3E2 /* FileListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileListView.swift; sourceTree = "<group>"; };
+		58B5577D29A0E2BF00DCB3E2 /* CheckFileOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckFileOptions.swift; sourceTree = "<group>"; };
+		58B5577F29A0E78F00DCB3E2 /* SizeUnits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeUnits.swift; sourceTree = "<group>"; };
+		58B5578329A1025700DCB3E2 /* FileListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileListViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +49,8 @@
 			isa = PBXGroup;
 			children = (
 				5811551829978DA000479D41 /* FileMetaData.swift */,
+				58B5577D29A0E2BF00DCB3E2 /* CheckFileOptions.swift */,
+				58B5577F29A0E78F00DCB3E2 /* SizeUnits.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -65,6 +75,8 @@
 		588F15B5298C42C800E8F8B2 /* Meta Search */ = {
 			isa = PBXGroup;
 			children = (
+				58B5578229A1011200DCB3E2 /* ViewModels */,
+				58B5577A29A0E23000DCB3E2 /* Views */,
 				5811551729978D8400479D41 /* Models */,
 				588F15B6298C42C800E8F8B2 /* Meta_SearchApp.swift */,
 				588F15B8298C42C800E8F8B2 /* ContentView.swift */,
@@ -81,6 +93,22 @@
 				588F15BD298C42C800E8F8B2 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		58B5577A29A0E23000DCB3E2 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				58B5577B29A0E24100DCB3E2 /* FileListView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		58B5578229A1011200DCB3E2 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				58B5578329A1025700DCB3E2 /* FileListViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -154,9 +182,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58B5578029A0E78F00DCB3E2 /* SizeUnits.swift in Sources */,
+				58B5578429A1025700DCB3E2 /* FileListViewModel.swift in Sources */,
+				58B5577C29A0E24100DCB3E2 /* FileListView.swift in Sources */,
 				588F15B9298C42C800E8F8B2 /* ContentView.swift in Sources */,
 				588F15B7298C42C800E8F8B2 /* Meta_SearchApp.swift in Sources */,
 				5811551929978DA000479D41 /* FileMetaData.swift in Sources */,
+				58B5577E29A0E2BF00DCB3E2 /* CheckFileOptions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

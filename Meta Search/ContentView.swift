@@ -14,38 +14,9 @@ extension URL {
 }
 
 struct ContentView: View {
-    @State var directory: URL? = nil
-    @State var allFiles: [FileMetaData] = []
-    @State var searchName = ""
-    @State var searchExtension = ""
-    @State var searchOwner = ""
-    @State private var searchSizeStart = ""
-    @State private var searchSizeEnd = ""
-    @State private var creationDateStart = Date()
-    @State private var creationDateEnd = Date()
-    @State private var modificationDateStart = Date()
-    @State private var modificationDateEnd = Date()
-    @State private var checkCreationDate = false
-    @State private var checkModificationDate = false
     let fm = FileManager.default
+    @StateObject var fileListVM = FileListViewModel()
     
-    func checkFile(file: FileMetaData) -> Bool {
-        var result = true
-        
-        if !searchName.isEmpty {
-            result = result && file.name.localizedCaseInsensitiveContains(searchName)
-        }
-        if !searchExtension.isEmpty {
-            result = result && file.fileExtension.hasPrefix(searchExtension.drop(while: { char in
-                char == "."
-            }))
-        }
-        if !searchOwner.isEmpty {
-            result = result && file.owner.localizedCaseInsensitiveContains(searchOwner)
-        }
-        
-        return result
-    }
     var body: some View {
         VStack {
             Image(systemName: "globe")
@@ -59,86 +30,81 @@ struct ContentView: View {
                     panel.canChooseFiles          = false
                     panel.canChooseDirectories    = true
                     if panel.runModal() == .OK {
-                        self.allFiles.removeAll()
-                        self.directory = panel.url
-                        let fileEnumerator = fm.enumerator(at: self.directory!, includingPropertiesForKeys: nil)
-                        while let file = fileEnumerator?.nextObject() as? URL  {
-                            if !file.isDirectory {
-                                let newFile = FileMetaData(file: file)
-                                allFiles.append(newFile)
-                            }
-                        }
+                        fileListVM.allFiles.removeAll()
+                        fileListVM.directory = panel.url
+                        let fileEnumerator = fm.enumerator(at: fileListVM.directory!, includingPropertiesForKeys: nil)
+                        fileListVM.populateFileList(fileEnumerator: fileEnumerator)
                     }
                 }
             }
             VStack {
-                TextField("Name", text: $searchName)
-                TextField("Extension", text: $searchExtension)
-                TextField("Owner", text: $searchOwner)
+                TextField("Name", text: $fileListVM.searchName)
+                TextField("Extension", text: $fileListVM.searchExtension)
+                TextField("Owner", text: $fileListVM.searchOwner)
                 VStack(alignment: .leading) {
                     Text("Size").font(.headline)
                     HStack {
-                        TextField("Min", text: $searchSizeStart)
-                        TextField("Max", text: $searchSizeEnd)
+                        TextField("Min", text: $fileListVM.searchSizeStart)
+                        Picker("", selection: $fileListVM.selectedUnitMin) {
+                            ForEach(SizeUnits.allCases) {
+                                Text($0.rawValue.uppercased())
+                            }
+                        }
+                        TextField("Max", text: $fileListVM.searchSizeEnd)
+                        Picker("", selection: $fileListVM.selectedUnitMax) {
+                            ForEach(SizeUnits.allCases) {
+                                Text($0.rawValue.uppercased())
+                            }
+                        }
                     }
                 }
                 VStack(alignment: .leading) {
                     HStack {
                         Text("Creation Date").font(.headline)
-                        Toggle("", isOn: $checkCreationDate.animation())
+                        Toggle("", isOn: $fileListVM.checkCreationDate.animation())
                         Spacer()
                     }
-                    if checkCreationDate {
+                    if fileListVM.checkCreationDate {
                         HStack {
                             DatePicker(
                                 "From",
-                                selection: $creationDateStart,
+                                selection: $fileListVM.creationDateStart,
                                 displayedComponents: [.date]
                             )
                             DatePicker(
                                 "To",
-                                selection: $creationDateEnd,
+                                selection: $fileListVM.creationDateEnd,
                                 displayedComponents: [.date]
                             )
                         }
                     }
                 }
                 .padding(.vertical)
+                
                 VStack(alignment: .leading) {
                     HStack() {
                         Text("Modification Date").font(.headline)
-                        Toggle("", isOn: $checkModificationDate.animation())
+                        Toggle("", isOn: $fileListVM.checkModificationDate.animation())
                         Spacer()
                     }
-                    
-                    if checkModificationDate {
+                    if fileListVM.checkModificationDate {
                         HStack {
                             DatePicker(
                                 "From",
-                                selection: $modificationDateStart,
+                                selection: $fileListVM.modificationDateStart,
                                 displayedComponents: [.date]
                             )
                             DatePicker(
                                 "To",
-                                selection: $modificationDateEnd,
+                                selection: $fileListVM.modificationDateEnd,
                                 displayedComponents: [.date]
                             )
                         }
                     }
                 }
             }
-            if (!allFiles.isEmpty) {
-                List {
-                    ForEach(allFiles.filter(checkFile)) { file in
-                        HStack {
-                            Text(file.url.path())
-                            Spacer()
-                            Text(String(format: "%.2f KB", Double(file.size) / 1000))
-                        }.onTapGesture(count: 2) {
-                            NSWorkspace.shared.activateFileViewerSelecting([file.url])
-                        }
-                    }
-                }
+            if (!fileListVM.allFiles.isEmpty) {
+                FileListView(allFiles: fileListVM.allFiles, checkOptions: fileListVM.checkOptions)
             }
         }
         .padding()
