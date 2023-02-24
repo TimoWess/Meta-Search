@@ -15,4 +15,8 @@ struct CheckFileOptions {
     var searchSizeEnd: String?
     var selectedUnitMin: SizeUnits?
     var selectedUnitMax: SizeUnits?
+    var creationDateStart: Date?
+    var creationDateEnd: Date?
+    var modificationDateStart: Date?
+    var modificationDateEnd: Date?
 }

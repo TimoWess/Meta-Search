@@ -35,7 +35,11 @@ class FileListViewModel: ObservableObject {
                 searchSizeStart: searchSizeStart,
                 searchSizeEnd: searchSizeEnd,
                 selectedUnitMin: selectedUnitMin,
-                selectedUnitMax: selectedUnitMax
+                selectedUnitMax: selectedUnitMax,
+                creationDateStart: creationDateStart,
+                creationDateEnd: creationDateEnd,
+                modificationDateStart: modificationDateStart,
+                modificationDateEnd: modificationDateEnd
             )
         }
     }
@@ -47,6 +51,13 @@ class FileListViewModel: ObservableObject {
                 self.allFiles.append(newFile)
             }
         }
-        
     }
+    
+    #if DEBUG
+    public static let example = {
+        var temp = FileListViewModel()
+        temp.allFiles = [FileMetaData(file: URL(string: "file:///Users/kerail/.zshrc")!)]
+        return temp
+    }()
+    #endif
 }

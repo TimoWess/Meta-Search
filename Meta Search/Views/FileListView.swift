@@ -8,9 +8,14 @@
 import SwiftUI
 
 struct FileListView: View {
-    let allFiles: [FileMetaData]
-    let checkOptions: CheckFileOptions
     @State var selectedFile: FileMetaData?
+    @EnvironmentObject var fileListVM: FileListViewModel
+    
+    func shortenDate(date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        return formatter.string(from: date)
+    }
     
     func checkFile(file: FileMetaData, options: CheckFileOptions) -> Bool {
         var result = true
@@ -42,13 +47,19 @@ struct FileListView: View {
                 result = result && Double(file.size) <= maxSize * maxMultiplier
             }
         }
+        if fileListVM.checkCreationDate && fileListVM.creationDateStart < fileListVM.creationDateEnd {
+            result = result && (fileListVM.creationDateStart ... fileListVM.creationDateEnd).contains(file.creationDate)
+        }
+        if fileListVM.checkModificationDate && fileListVM.modificationDateStart < fileListVM.modificationDateEnd {
+            result = result && (fileListVM.modificationDateStart ... fileListVM.modificationDateEnd).contains(file.modificationDate)
+        }
         
         return result
     }
     
     var body: some View {
         List {
-            ForEach(allFiles.filter({ checkFile(file: $0, options: checkOptions) })) { file in
+            ForEach(fileListVM.allFiles.filter({ checkFile(file: $0, options: fileListVM.checkOptions) })) { file in
                 HStack {
                     VStack(alignment: .leading) {
                         Text(file.url.path())
@@ -62,7 +73,8 @@ struct FileListView: View {
 #endif
                             Text(SizeUnits.getBiggestUnitRepresentation(size: file.size))
                         }
-                        Text(file.creationDate.description)
+                        Text("C: \(shortenDate(date: file.creationDate))")
+                        Text("M: \(shortenDate(date: file.modificationDate))")
                     }
                 }
                 .listRowBackground(self.selectedFile?.id == file.id ? Color.accentColor : Color.clear)
@@ -79,6 +91,7 @@ struct FileListView: View {
 
 struct FileListView_Previews: PreviewProvider {
     static var previews: some View {
-        FileListView(allFiles: [.init(file: URL(string: "file:///Users/kerail/.zshrc")!)], checkOptions: .init())
+        FileListView()
+            .environmentObject(FileListViewModel.example)
     }
 }
