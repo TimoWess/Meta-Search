@@ -20,9 +20,7 @@ struct ContentView: View {
         VStack {
             StartView()
             InputFormView()
-            if (!fileListVM.allFiles.isEmpty) {
-                FileListView()
-            }
+            FileListView()
         }
         .padding()
         .environmentObject(fileListVM)

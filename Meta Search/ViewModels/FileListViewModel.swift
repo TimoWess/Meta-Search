@@ -44,13 +44,20 @@ class FileListViewModel: ObservableObject {
         }
     }
     
-    func populateFileList(fileEnumerator: FileManager.DirectoryEnumerator?) {
+    func populateFileList() {
+        guard let directory = directory else { return }
+        let fileEnumerator = fm.enumerator(at: directory, includingPropertiesForKeys: nil)
         while let file = fileEnumerator?.nextObject() as? URL  {
             if !file.isDirectory {
                 let newFile = FileMetaData(file: file)
                 self.allFiles.append(newFile)
             }
         }
+    }
+    
+    func reset() {
+        self.allFiles.removeAll()
+        self.directory = nil
     }
     
     #if DEBUG

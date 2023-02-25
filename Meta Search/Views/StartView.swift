@@ -10,7 +10,6 @@ import SwiftUI
 struct StartView: View {
     @EnvironmentObject var fileListVM: FileListViewModel
     let fm = FileManager.default
-    @State var allFiles: [[FileAttributeKey : Any]] = []
     var body: some View {
         VStack {
             Image(systemName: "globe")
@@ -24,10 +23,9 @@ struct StartView: View {
                     panel.canChooseFiles          = false
                     panel.canChooseDirectories    = true
                     if panel.runModal() == .OK {
-                        fileListVM.allFiles.removeAll()
+                        fileListVM.reset()
                         fileListVM.directory = panel.url
-                        let fileEnumerator = fm.enumerator(at: fileListVM.directory!, includingPropertiesForKeys: nil)
-                        fileListVM.populateFileList(fileEnumerator: fileEnumerator)
+                        fileListVM.populateFileList()
                     }
                 }
             }

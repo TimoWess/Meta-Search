@@ -58,32 +58,34 @@ struct FileListView: View {
     }
     
     var body: some View {
-        List {
-            ForEach(fileListVM.allFiles.filter({ checkFile(file: $0, options: fileListVM.checkOptions) })) { file in
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text(file.url.path())
-                        Text("Owner: \(file.owner)").font(.caption)
-                    }
-                    Spacer()
-                    VStack {
-                        HStack {
-#if DEBUG
-                            Text(String(format: "%.2f KB", Double(file.size) / 1000))
-#endif
-                            Text(SizeUnits.getBiggestUnitRepresentation(size: file.size))
+        if (fileListVM.directory != nil) {
+            List {
+                ForEach(fileListVM.allFiles.filter({ checkFile(file: $0, options: fileListVM.checkOptions) })) { file in
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text(file.url.path())
+                            Text("Owner: \(file.owner)").font(.caption)
                         }
-                        Text("C: \(shortenDate(date: file.creationDate))")
-                        Text("M: \(shortenDate(date: file.modificationDate))")
+                        Spacer()
+                        VStack {
+                            HStack {
+#if DEBUG
+                                Text(String(format: "%.2f KB", Double(file.size) / 1000))
+#endif
+                                Text(SizeUnits.getBiggestUnitRepresentation(size: file.size))
+                            }
+                            Text("C: \(shortenDate(date: file.creationDate))")
+                            Text("M: \(shortenDate(date: file.modificationDate))")
+                        }
                     }
+                    .listRowBackground(self.selectedFile?.id == file.id ? Color.accentColor : Color.clear)
+                    .onTapGesture(count: 2) {
+                        NSWorkspace.shared.activateFileViewerSelecting([file.url])
+                    }
+                    .simultaneousGesture(TapGesture().onEnded {
+                        self.selectedFile = file
+                    })
                 }
-                .listRowBackground(self.selectedFile?.id == file.id ? Color.accentColor : Color.clear)
-                .onTapGesture(count: 2) {
-                    NSWorkspace.shared.activateFileViewerSelecting([file.url])
-                }
-                .simultaneousGesture(TapGesture().onEnded {
-                    self.selectedFile = file
-                })
             }
         }
     }
