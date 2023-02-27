@@ -38,14 +38,16 @@ class FileListViewModel: ObservableObject {
                 selectedUnitMax: selectedUnitMax,
                 creationDateStart: creationDateStart,
                 creationDateEnd: creationDateEnd,
-                modificationDateStart: modificationDateStart,
-                modificationDateEnd: modificationDateEnd
+                modDateStart: modificationDateStart,
+                modDateEnd: modificationDateEnd,
+                checkModificationDate: checkModificationDate,
+                checkCreationDate: checkCreationDate
             )
         }
     }
     
     func populateFileList() {
-        guard let directory = directory else { return }
+        guard let directory = directory else { print("No directory set!"); return }
         let fileEnumerator = fm.enumerator(at: directory, includingPropertiesForKeys: nil)
         while let file = fileEnumerator?.nextObject() as? URL  {
             if !file.isDirectory {
@@ -55,6 +57,16 @@ class FileListViewModel: ObservableObject {
         }
     }
     
+    func populateFileListAsync() async {
+        guard let directory = directory else { return }
+        let fileEnumerator = fm.enumerator(at: directory, includingPropertiesForKeys: nil)
+        while let file = fileEnumerator?.nextObject() as? URL  {
+            if !file.isDirectory {
+                let newFile = FileMetaData(file: file)
+                self.allFiles.append(newFile)
+            }
+        }
+    }
     func reset() {
         self.allFiles.removeAll()
         self.directory = nil

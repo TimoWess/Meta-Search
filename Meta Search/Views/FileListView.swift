@@ -11,50 +11,40 @@ struct FileListView: View {
     @State var selectedFile: FileMetaData?
     @EnvironmentObject var fileListVM: FileListViewModel
     
-    func shortenDate(date: Date) -> String {
+    func formatDate(date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateStyle = .short
         return formatter.string(from: date)
     }
     
     func checkFile(file: FileMetaData, options: CheckFileOptions) -> Bool {
-        var result = true
+        var results: [Bool] = []
         
-        if let searchName = options.searchName {
-            if !searchName.isEmpty {
-                result = result && file.name.localizedCaseInsensitiveContains(searchName)
-            }
+        if !options.searchName.isEmpty {
+            results.append(file.name.localizedCaseInsensitiveContains(options.searchName))
         }
-        if let searchExtension = options.searchExtension {
-            if !searchExtension.isEmpty {
-                result = result && file.fileExtension.hasPrefix(searchExtension.drop(while: { $0 == "." }))
-            }
+        if !options.searchExtension.isEmpty {
+            results.append(file.fileExtension.hasPrefix(options.searchExtension.drop(while: { $0 == "." })))
         }
-        if let searchOwner = options.searchOwner {
-            if !searchOwner.isEmpty {
-                result = result && file.owner.localizedCaseInsensitiveContains(searchOwner)
-            }
+        if !options.searchOwner.isEmpty {
+            results.append(file.owner.localizedCaseInsensitiveContains(options.searchOwner))
         }
-        if let searchSizeStart = options.searchSizeStart, let selectedUnitMin = options.selectedUnitMin {
-            if let minSize = Double(searchSizeStart) {
-                let minMultiplier = selectedUnitMin.getUnitMultiplier()
-                result = result && minSize * minMultiplier <= Double(file.size)
-            }
+        if let minSize = Double(options.searchSizeStart) {
+            let minMultiplier = options.selectedUnitMin.getUnitMultiplier()
+            results.append(minSize * minMultiplier <= Double(file.size))
         }
-        if let searchSizeEnd = options.searchSizeEnd, let selectedUnitMax = options.selectedUnitMax {
-            if let maxSize = Double(searchSizeEnd) {
-                let maxMultiplier = selectedUnitMax.getUnitMultiplier()
-                result = result && Double(file.size) <= maxSize * maxMultiplier
-            }
+        if let maxSize = Double(options.searchSizeEnd) {
+            let maxMultiplier = options.selectedUnitMax.getUnitMultiplier()
+            results.append(Double(file.size) <= maxSize * maxMultiplier)
         }
-        if fileListVM.checkCreationDate && fileListVM.creationDateStart < fileListVM.creationDateEnd {
-            result = result && (fileListVM.creationDateStart ... fileListVM.creationDateEnd).contains(file.creationDate)
+        if options.checkCreationDate, let creationDateRange = options.creationDateRange {
+            results.append(creationDateRange.contains(file.creationDate))
         }
-        if fileListVM.checkModificationDate && fileListVM.modificationDateStart < fileListVM.modificationDateEnd {
-            result = result && (fileListVM.modificationDateStart ... fileListVM.modificationDateEnd).contains(file.modificationDate)
+        if options.checkModificationDate, let modDateRange = options.modDateRange {
+            results.append(modDateRange.contains(file.modificationDate))
         }
         
-        return result
+        return results.allSatisfy {$0}
     }
     
     var body: some View {
@@ -74,8 +64,8 @@ struct FileListView: View {
 #endif
                                 Text(SizeUnits.getBiggestUnitRepresentation(size: file.size))
                             }
-                            Text("C: \(shortenDate(date: file.creationDate))")
-                            Text("M: \(shortenDate(date: file.modificationDate))")
+                            Text("C: \(formatDate(date: file.creationDate))")
+                            Text("M: \(formatDate(date: file.modificationDate))")
                         }
                     }
                     .listRowBackground(self.selectedFile?.id == file.id ? Color.accentColor : Color.clear)

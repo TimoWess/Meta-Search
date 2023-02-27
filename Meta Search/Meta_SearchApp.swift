@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct Meta_SearchApp: App {
+    @StateObject var fileListVM = FileListViewModel()
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(fileListVM)
         }
     }
 }

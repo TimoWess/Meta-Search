@@ -15,19 +15,20 @@ struct StartView: View {
             Image(systemName: "globe")
                 .imageScale(.large)
                 .foregroundColor(.accentColor)
-            Button("Select Folder")
-            {
-                withAnimation {
-                    let panel = NSOpenPanel()
-                    panel.allowsMultipleSelection = false
-                    panel.canChooseFiles          = false
-                    panel.canChooseDirectories    = true
-                    if panel.runModal() == .OK {
-                        fileListVM.reset()
-                        fileListVM.directory = panel.url
-                        fileListVM.populateFileList()
-                    }
-                }
+            Button("Select Folder", action: selectDirectory)
+        }
+    }
+    
+    func selectDirectory() {
+        withAnimation {
+            let panel = NSOpenPanel()
+            panel.allowsMultipleSelection = false
+            panel.canChooseFiles          = false
+            panel.canChooseDirectories    = true
+            if panel.runModal() == .OK {
+                fileListVM.reset()
+                fileListVM.directory = panel.url
+                fileListVM.populateFileList()
             }
         }
     }
@@ -39,3 +40,4 @@ struct StartView_Previews: PreviewProvider {
             .environmentObject(FileListViewModel())
     }
 }
+

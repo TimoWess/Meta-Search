@@ -14,7 +14,7 @@ extension URL {
 }
 
 struct ContentView: View {
-    @StateObject var fileListVM = FileListViewModel()
+    @EnvironmentObject var fileListVM: FileListViewModel
     
     var body: some View {
         VStack {
@@ -23,7 +23,6 @@ struct ContentView: View {
             FileListView()
         }
         .padding()
-        .environmentObject(fileListVM)
     }
 }
 
