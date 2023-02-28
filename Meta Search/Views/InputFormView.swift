@@ -11,24 +11,33 @@ struct InputFormView: View {
     @EnvironmentObject var fileListVM: FileListViewModel
     var body: some View {
         VStack {
-            TextField("Name", text: $fileListVM.searchName)
+            HStack {
+                TextField("Name", text: $fileListVM.searchName)
+                Toggle("Fuzzy Search", isOn: $fileListVM.isFuzzyName)
+            }
             TextField("Extension", text: $fileListVM.searchExtension)
             TextField("Owner", text: $fileListVM.searchOwner)
             VStack(alignment: .leading) {
                 Text("Size").font(.headline)
                 HStack {
                     TextField("Min", text: $fileListVM.searchSizeStart)
-                    Picker("", selection: $fileListVM.selectedUnitMin) {
+                    Picker(selection: $fileListVM.selectedUnitMin) {
                         ForEach(SizeUnits.allCases) {
                             Text($0.rawValue.uppercased())
                         }
+                    } label: {
+                        EmptyView()
                     }
+                    .frame(minWidth: 0, maxWidth: 50)
                     TextField("Max", text: $fileListVM.searchSizeEnd)
-                    Picker("", selection: $fileListVM.selectedUnitMax) {
+                    Picker(selection: $fileListVM.selectedUnitMax) {
                         ForEach(SizeUnits.allCases) {
                             Text($0.rawValue.uppercased())
                         }
+                    } label: {
+                        EmptyView()
                     }
+                    .frame(minWidth: 0, maxWidth: 50)
                 }
             }
             VStack(alignment: .leading) {

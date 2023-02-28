@@ -21,13 +21,13 @@ struct FileListView: View {
         var results: [Bool] = []
         
         if !options.searchName.isEmpty {
-            results.append(file.name.localizedCaseInsensitiveContains(options.searchName))
+            results.append(options.isFuzzyName ? file.name.fuzzyMatchCaseInsensitive(options.searchName) : file.name.localizedCaseInsensitiveContains(options.searchName))
         }
         if !options.searchExtension.isEmpty {
-            results.append(file.fileExtension.hasPrefix(options.searchExtension.drop(while: { $0 == "." })))
+            results.append(file.fileExtension.lowercased().hasPrefix(options.searchExtension.lowercased().drop(while: { $0 == "." })))
         }
         if !options.searchOwner.isEmpty {
-            results.append(file.owner.localizedCaseInsensitiveContains(options.searchOwner))
+            results.append(file.owner.fuzzyMatchCaseInsensitive(options.searchOwner))
         }
         if let minSize = Double(options.searchSizeStart) {
             let minMultiplier = options.selectedUnitMin.getUnitMultiplier()

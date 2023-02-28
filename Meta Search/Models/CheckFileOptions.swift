@@ -9,6 +9,7 @@ import Foundation
 
 struct CheckFileOptions {
     var searchName: String
+    var isFuzzyName: Bool
     var searchExtension: String
     var searchOwner: String
     var searchSizeStart: String

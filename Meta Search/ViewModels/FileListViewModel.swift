@@ -11,6 +11,7 @@ class FileListViewModel: ObservableObject {
     @Published var directory: URL?              = nil
     @Published var allFiles: [FileMetaData]     = []
     @Published var searchName                   = ""
+    @Published var isFuzzyName                  = true
     @Published var searchExtension              = ""
     @Published var searchOwner                  = ""
     @Published var searchSizeStart              = ""
@@ -30,6 +31,7 @@ class FileListViewModel: ObservableObject {
         get {
             return CheckFileOptions(
                 searchName: searchName,
+                isFuzzyName: isFuzzyName,
                 searchExtension: searchExtension,
                 searchOwner: searchOwner,
                 searchSizeStart: searchSizeStart,
