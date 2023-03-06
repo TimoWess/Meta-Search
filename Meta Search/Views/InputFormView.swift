@@ -21,29 +21,29 @@ struct InputFormView: View {
                 Text("Size").font(.headline)
                 HStack {
                     TextField("Min", text: $fileListVM.searchSizeStart)
-                    Picker(selection: $fileListVM.selectedUnitMin) {
+                    Picker("", selection: $fileListVM.selectedUnitMin) {
                         ForEach(SizeUnits.allCases) {
                             Text($0.rawValue.uppercased())
                         }
-                    } label: {
-                        EmptyView()
                     }
+                    .labelsHidden()
                     .frame(minWidth: 0, maxWidth: 50)
                     TextField("Max", text: $fileListVM.searchSizeEnd)
-                    Picker(selection: $fileListVM.selectedUnitMax) {
+                    Picker("", selection: $fileListVM.selectedUnitMax) {
                         ForEach(SizeUnits.allCases) {
                             Text($0.rawValue.uppercased())
                         }
-                    } label: {
-                        EmptyView()
                     }
+                    .labelsHidden()
                     .frame(minWidth: 0, maxWidth: 50)
                 }
             }
             VStack(alignment: .leading) {
                 HStack {
-                    Text("Creation Date").font(.headline)
-                    Toggle("", isOn: $fileListVM.checkCreationDate.animation())
+                    Toggle(isOn: $fileListVM.checkCreationDate.animation()) {
+                        Text("Creation Date").font(.headline)
+                    }
+                    .frame(alignment: .leading)
                     Spacer()
                 }
                 if fileListVM.checkCreationDate {
@@ -70,8 +70,9 @@ struct InputFormView: View {
             
             VStack(alignment: .leading) {
                 HStack() {
-                    Text("Modification Date").font(.headline)
-                    Toggle("", isOn: $fileListVM.checkModificationDate.animation())
+                    Toggle(isOn: $fileListVM.checkModificationDate.animation()) {
+                        Text("Modification Date").font(.headline)
+                    }
                     Spacer()
                 }
                 if fileListVM.checkModificationDate {

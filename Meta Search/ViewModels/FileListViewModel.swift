@@ -11,7 +11,6 @@ class FileListViewModel: ObservableObject {
     @Published var directory: URL?              = nil
     @Published var allFiles: [FileMetaData]     = []
     @Published var searchName                   = ""
-    @Published var isFuzzyName                  = true
     @Published var searchExtension              = ""
     @Published var searchOwner                  = ""
     @Published var searchSizeStart              = ""
@@ -20,6 +19,7 @@ class FileListViewModel: ObservableObject {
     @Published var creationDateEnd              = Date()
     @Published var modificationDateStart        = Date()
     @Published var modificationDateEnd          = Date()
+    @Published var isFuzzyName                  = true
     @Published var checkCreationDate            = false
     @Published var checkModificationDate        = false
     @Published var selectedUnitMin: SizeUnits   = .mb
@@ -28,24 +28,22 @@ class FileListViewModel: ObservableObject {
     let fm = FileManager.default
     
     var checkOptions: CheckFileOptions {
-        get {
-            return CheckFileOptions(
-                searchName: searchName,
-                isFuzzyName: isFuzzyName,
-                searchExtension: searchExtension,
-                searchOwner: searchOwner,
-                searchSizeStart: searchSizeStart,
-                searchSizeEnd: searchSizeEnd,
-                selectedUnitMin: selectedUnitMin,
-                selectedUnitMax: selectedUnitMax,
-                creationDateStart: creationDateStart,
-                creationDateEnd: creationDateEnd,
-                modDateStart: modificationDateStart,
-                modDateEnd: modificationDateEnd,
-                checkModificationDate: checkModificationDate,
-                checkCreationDate: checkCreationDate
-            )
-        }
+        return CheckFileOptions(
+            searchName: searchName,
+            isFuzzyName: isFuzzyName,
+            searchExtension: searchExtension,
+            searchOwner: searchOwner,
+            searchSizeStart: searchSizeStart,
+            searchSizeEnd: searchSizeEnd,
+            selectedUnitMin: selectedUnitMin,
+            selectedUnitMax: selectedUnitMax,
+            creationDateStart: creationDateStart,
+            creationDateEnd: creationDateEnd,
+            modDateStart: modificationDateStart,
+            modDateEnd: modificationDateEnd,
+            checkModificationDate: checkModificationDate,
+            checkCreationDate: checkCreationDate
+        )
     }
     
     func populateFileList() {
